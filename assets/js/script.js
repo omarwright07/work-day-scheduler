@@ -59,14 +59,14 @@ var checkTimeBlock = function (timeBlockEl) {
     // remove any old classes from element
     $(timeBlockEl).removeClass("future past present");
     var blockID = $(timeBlockEl).attr("id").replace("timeBlock", "");
-    var blockTime = moment(blockID, "hA");
-    var rightNow = moment().format("hh");
-
+    var blockTime = moment(blockID,"hA");
+    var rightNow = moment();
+    console.log(blockID + " - " + Math.abs(blockTime.diff(rightNow, "seconds")));
     // apply new class if task is in the future, past, or present
     if (blockTime.isAfter(rightNow)) {
         $(timeBlockEl).addClass("future");
     }
-    else if (Math.abs(blockTime.diff(rightNow, "seconds")) <= 1) {
+    else if (Math.abs(blockTime.diff(rightNow, "seconds")) <= 3599) {
         $(timeBlockEl).addClass("past");
     }
     else {
