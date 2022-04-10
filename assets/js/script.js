@@ -1,47 +1,45 @@
-// get today's date to display at the top of web app
-var todayDate = moment().format("dddd, MMMM Do");
 //holds all time block data to save
 var timeBlocks = {
-    timeBlock9AM: "Test1",
-    timeBlock10AM: "Test1",
-    timeBlock11AM: "Test1",
-    timeBlock12PM: "Test1",
-    timeBlock1PM: "Test1",
-    timeBlock2PM: "Test1",
-    timeBlock3PM: "Test1",
-    timeBlock4PM: "Test1",
-    timeBlock5PM: "Test1",
+    timeBlock9AM: "",
+    timeBlock10AM: "",
+    timeBlock11AM: "",
+    timeBlock12PM: "",
+    timeBlock1PM: "",
+    timeBlock2PM: "",
+    timeBlock3PM: "",
+    timeBlock4PM: "",
+    timeBlock5PM: "",
 };
+
 // ###########################################################
 // ###########################################################
 // Save and Load Funcitons ____________________________________
-var saveTimeBlock = function () {
-    console.log("Saving...")
-    // var timeBlockEntry = {
-    //     time: ,
-    //     description: , 
-    // }
-    saveTimeBlocks();
+var saveTimeBlocks = function () {
+    localStorage.setItem("timeBlocks", JSON.stringify(timeBlocks));
 };
 
-var saveTimeBlocks = function () {
-    // localStorage.setItem("timeBlocks", JSON.stringify(timeBlocks));
-    console.log(timeBlocks);
+var saveTimeBlock = function () {
+    console.log("Saving...")
+    saveTimeBlocks();
 };
 
 var loadTimeBlocks = function () {
     console.log("Loading Time Blocks....");
-    timeBlocks = JSON.parse(localStorage.getItem("timeBlocks"));
+    var savedtimeBlocks = JSON.parse(localStorage.getItem("timeBlocks"));
 
     // if nothing in localStorage, create a new object to track all description
-    if (!timeBlocks) {
-        console.log("There was no local save!");
+    if (!savedtimeBlocks) {
+        console.log("There was no local save! Setting default values!");
+        for (i = 0; i < 9; i++) {
+            var timeBlockEl = ("#timeblock" + moment("9AM", "hA").add(i, "hour").format("hA"));
+            // var test = timeBlockEl.replace("#","");
+            $(timeBlockEl).text(Object.values(timeBlocks)[i]);
+        }
     } else {
         console.log("Loaded from local save!")
+        timeBlocks = JSON.parse(localStorage.getItem("timeBlocks"));
     }
 };
-
-$(".container").on("click", ".saveBtn", saveTimeBlock);
 
 // Time Blocks Funcitons ____________________________________
 var updateTimeBlocks = function () {
@@ -56,7 +54,7 @@ var updateTimeBlocks = function () {
 var checkTimeBlock = function (timeBlockEl) {
     // remove any old classes from element
     $(timeBlockEl).removeClass("future past present");
-    var blockID = $(timeBlockEl).attr("id").replace("timeblock","");
+    var blockID = $(timeBlockEl).attr("id").replace("timeblock", "");
     var blockTime = moment(blockID, "hA");
     var rightNow = moment().format("hh");
 
@@ -109,15 +107,17 @@ var generateTimeBlocks = function () {
 
 // Misc Funcitons ____________________________________
 var setCurrentDate = function () {
+    // get today's date to display at the top of web app
+    var todayDate = moment().format("dddd, MMMM Do");
     var currentDateEl = document.querySelector("#currentDay");
     currentDateEl.innerHTML = todayDate;
 };
 
 // ###########################################################
 // ###########################################################
+
 setCurrentDate();
 generateTimeBlocks();
 loadTimeBlocks();
 var myUpdater = setInterval(updateTimeBlocks, 5000);
-console.log("This is the timeblock object")
-console.log(timeBlocks);
+$(".container").on("click", ".saveBtn", saveTimeBlock);
