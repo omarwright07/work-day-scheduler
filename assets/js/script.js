@@ -10,30 +10,26 @@ var timeBlocks = {
     timeBlock4PM: "",
     timeBlock5PM: "",
 };
+var timeBlocksLength = Object.keys(timeBlocks).length;
+// ###########################################################
+// ###########################################################
 
-// ###########################################################
-// ###########################################################
 // Save and Load Funcitons ____________________________________
 var saveTimeBlock = function (id) {
     console.log("Saving...")
     var saveTextArea = "#" + id;
     var text = $(saveTextArea).val();
     timeBlocks[id] = text;
-    console.log(id);
-    console.log(saveTextArea);
-    console.log(text);
-    console.log(timeBlocks);
     localStorage.setItem("timeBlocks", JSON.stringify(timeBlocks));
 };
 
 var loadTimeBlocks = function () {
-    console.log("Loading Time Blocks....");
     var savedtimeBlocks = JSON.parse(localStorage.getItem("timeBlocks"));
 
     // if nothing in localStorage, create a new object to track all description
     if (!savedtimeBlocks) {
         console.log("There was no local save! Setting default values!");
-        for (i = 0; i < 9; i++) {
+        for (i = 0; i < timeBlocksLength; i++) {
             setTimeBlocksText();
         }
     } else {
@@ -44,9 +40,8 @@ var loadTimeBlocks = function () {
 };
 
 var setTimeBlocksText = function () {
-    for (i = 0; i < 9; i++) {
+    for (i = 0; i < timeBlocksLength; i++) {
         var timeBlockEl = ("#timeBlock" + moment("9AM", "hA").add(i, "hour").format("hA"));
-        // var test = timeBlockEl.replace("#","");
         $(timeBlockEl).text(Object.values(timeBlocks)[i]);
     }
 }
@@ -54,8 +49,7 @@ var setTimeBlocksText = function () {
 // Time Blocks Funcitons ____________________________________
 var updateTimeBlocks = function () {
     setCurrentDate();
-    // console.log("Updating Time Blocks....");
-    for (i = 0; i < 9; i++) {
+    for (i = 0; i < timeBlocksLength; i++) {
         var timeBlockEl = ("#timeBlock" + moment("9AM", "hA").add(i, "hour").format("hA"));
         checkTimeBlock($(timeBlockEl));
     }
@@ -78,14 +72,11 @@ var checkTimeBlock = function (timeBlockEl) {
     else {
         $(timeBlockEl).addClass("present");
     }
-}
-
+};
 
 // Generate Time Blocks Funcitons ____________________________________
 var generateTimeBlocks = function () {
-    // console.log("Generating Time Blocks....");
-    // (9) 9am,10am,11am,12pm,1pm,2pm,3pm,4pm,5pm
-    for (var i = 0; i < 9; i++) {
+    for (var i = 0; i < timeBlocksLength; i++) {
         var timeBlockHour = moment("9AM", "hA").add(i, "hour").format("hA");
 
         // create elements that make up a time block
